@@ -163,21 +163,20 @@
         result = null;
 
         if (_isAIOn)
-        {
-            // Simulated delay so the loading state still looks realistic
-            await Task.Delay(800);
-            result = GetMockResponse();
-        }
-        else
-        {
-
+        { 
             var prompt = new Prompt(selection.ResponseLanguage)
             {
                 Body = BuildPromptBody()
             };
 
             var raw = await AiTrainerService.CallTheAI($"{prompt.Header}\n\n{prompt.Body}");
-            result = ParseAiResponse(raw);
+            result = ParseAiResponse(raw);   
+        }
+        else
+        {
+            // Simulated delay so the loading state still looks realistic
+            await Task.Delay(800);
+            result = GetMockResponse();
         }
 
         isLoading = false;
