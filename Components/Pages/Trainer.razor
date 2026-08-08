@@ -76,6 +76,9 @@
         <button class="train-button" @onclick="TrainMe" disabled="@isLoading">
             @(isLoading ? "Analyzing..." : "Train Me")
         </button>
+        <button class="train-button" @onclick="ToggleAIEngine">
+            @(_isAIOn ? "AI is ON" : "AI is OFF")
+        </button>
     </div>
 
     <!-- Results section -->
@@ -159,7 +162,7 @@
         isLoading = true;
         result = null;
 
-        if (UseMockResponse)
+        if (_isAIOn)
         {
             // Simulated delay so the loading state still looks realistic
             await Task.Delay(800);
@@ -224,6 +227,10 @@
             };
         }
     }
+
+    // Turning AI OFF ON
+    private bool _isAIOn = false;
+    private void ToggleAIEngine() => _isAIOn = !_isAIOn;
 
     // Step 3: mock/placeholder logic to preview the UI without calling the AI
     private AiTrainingResponse GetMockResponse()
