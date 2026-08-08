@@ -1,0 +1,205 @@
+.trainer-page {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 56px 32px 96px;
+    color: #cdd6e3;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 1.05rem;
+}
+
+.trainer-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.trainer-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 0;
+    color: #f0f4fb;
+}
+
+.trainer-header .accent {
+    color: #c8aa6e; /* hextech gold */
+}
+
+.trainer-header p {
+    color: #7a8aa3;
+    margin-top: 10px;
+    font-size: 1.1rem;
+}
+
+.trainer-card {
+    background: linear-gradient(180deg, #0a1428 0%, #0e1c34 100%);
+    border: 1px solid #1e3a5f;
+    border-radius: 14px;
+    padding: 40px;
+    box-shadow: 0 0 0 1px rgba(200, 170, 110, 0.08), 0 24px 48px rgba(0,0,0,0.4);
+}
+
+.field-group {
+    margin-bottom: 26px;
+}
+
+.field-group label {
+    display: block;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #8fa3c0;
+    margin-bottom: 10px;
+}
+
+.field-group input,
+.language-select {
+    width: 100%;
+    background: #0c1c33;
+    border: 1px solid #26456e;
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: #f0f4fb;
+    font-size: 1.1rem;
+    box-sizing: border-box;
+}
+
+.field-group input:focus,
+.language-select:focus {
+    outline: none;
+    border-color: #c8aa6e;
+}
+
+.language-select {
+    cursor: pointer;
+}
+
+.lane-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.lane-button {
+    flex: 1;
+    padding: 14px;
+    background: #0c1c33;
+    border: 1px solid #26456e;
+    border-radius: 8px;
+    color: #8fa3c0;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.15s ease;
+}
+
+.lane-button:hover {
+    border-color: #ffffff;
+    color: #f0f4fb;
+}
+
+.lane-button.active {
+    background: #c8aa6e;
+    border-color: #c8aa6e;
+    color: #0a1428;
+}
+
+.matchup-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: end;
+    gap: 16px;
+}
+
+.duo-grid {
+    margin-top: 6px;
+}
+
+.vs-label {
+    padding-bottom: 16px;
+    color: #c8aa6e;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.train-button {
+    width: 100%;
+    margin-top: 16px;
+    padding: 18px;
+    background: linear-gradient(90deg, #c8aa6e, #e8d5a8);
+    border: none;
+    border-radius: 8px;
+    color: #0a1428;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.train-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.train-button:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.results-grid {
+    margin-top: 36px;
+    display: grid;
+    gap: 22px;
+}
+
+.result-card {
+    background: #0c1c33;
+    border: 1px solid #1e3a5f;
+    border-left: 4px solid #c8aa6e;
+    border-radius: 10px;
+    padding: 26px 28px;
+}
+
+.result-card h3 {
+    margin: 0 0 14px 0;
+    color: #c8aa6e;
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.result-card p {
+    margin: 0 0 10px 0;
+    line-height: 1.65;
+    color: #cdd6e3;
+    font-size: 1.05rem;
+}
+
+.result-card p:last-child {
+    margin-bottom: 0;
+}
+
+.overview-card {
+    border-left-color: #8fa3c0;
+    font-style: italic;
+    color: #b6c2d6;
+    font-size: 1.1rem;
+}
+
+.tip-list {
+    margin: 0;
+    padding-left: 24px;
+}
+
+.tip-list li {
+    margin-bottom: 16px;
+    line-height: 1.65;
+    color: #cdd6e3;
+    font-size: 1.05rem;
+}
+
+.tip-list li:last-child {
+    margin-bottom: 0;
+}
+
+.tip-list li strong {
+    color: #f0f4fb;
+}

@@ -1,0 +1,47 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.top-navbar {
+    background: #0a1428;
+    border-bottom: 1px solid #1e3a5f;
+    padding: 16px 32px;
+    /* no position: sticky/fixed here — it just sits at the top and scrolls away normally */
+}
+
+.navbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.navbar-brand {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #c8aa6e;
+    text-decoration: none;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 24px;
+}
+
+.navbar-links .nav-link {
+    color: #8fa3c0;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.navbar-links .nav-link:hover,
+.navbar-links .nav-link.active {
+    color: #f0f4fb;
+}
+
+main {
+    flex: 1;
+}

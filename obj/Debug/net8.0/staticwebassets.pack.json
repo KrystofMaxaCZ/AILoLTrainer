@@ -1,0 +1,41 @@
+{
+  "Files": [
+    {
+      "Id": "/Users/maxak/RiderProjects/LoLAnalyzer/obj/Debug/net8.0/scopedcss/projectbundle/LoLAnalyzer.bundle.scp.css",
+      "PackagePath": "staticwebassets/LoLAnalyzer.bundle.scp.css"
+    },
+    {
+      "Id": "/Users/maxak/RiderProjects/LoLAnalyzer/wwwroot/app.css",
+      "PackagePath": "staticwebassets/app.css"
+    },
+    {
+      "Id": "/Users/maxak/RiderProjects/LoLAnalyzer/wwwroot/bootstrap/bootstrap.min.css",
+      "PackagePath": "staticwebassets/bootstrap/bootstrap.min.css"
+    },
+    {
+      "Id": "/Users/maxak/RiderProjects/LoLAnalyzer/wwwroot/bootstrap/bootstrap.min.css.map",
+      "PackagePath": "staticwebassets/bootstrap/bootstrap.min.css.map"
+    },
+    {
+      "Id": "/Users/maxak/RiderProjects/LoLAnalyzer/wwwroot/favicon.png",
+      "PackagePath": "staticwebassets/favicon.png"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.LoLAnalyzer.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.build.LoLAnalyzer.props",
+      "PackagePath": "build\\LoLAnalyzer.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.LoLAnalyzer.props",
+      "PackagePath": "buildMultiTargeting\\LoLAnalyzer.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.LoLAnalyzer.props",
+      "PackagePath": "buildTransitive\\LoLAnalyzer.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

@@ -1,0 +1,313 @@
+@page "/"
+@using System.Text.Json
+@using LoLAnalyzer.Models
+@inject AITrainerService AiTrainerService
+
+<PageTitle>LoL AI Trainer</PageTitle>
+
+<div class="trainer-page">
+
+    <header class="trainer-header">
+        <h1>AI <span class="accent">Trainer</span></h1>
+        <p>Pick your matchup. Get your build.</p>
+    </header>
+
+    <div class="trainer-card">
+
+        <!-- Lane selection -->
+        <div class="field-group">
+            <label>Lane</label>
+            <div class="lane-buttons">
+                @foreach (var lane in Enum.GetValues<LaneRole>())
+                {
+                    <button type="button"
+                            class="lane-button @(selection.SelectedLane == lane ? "active" : "")"
+                            @onclick="() => SelectLane(lane)">
+                        @lane
+                    </button>
+                }
+            </div>
+            <div class="field-group">
+                <label>Response Language</label>
+                <select @bind="selection.ResponseLanguage" class="language-select">
+                    <option value="English">English</option>
+                    <option value="Czech">Čeština</option>
+                    <option value="Slovak">Slovenčina</option>
+                    <option value="German">Deutsch</option>
+                    <option value="Spanish">Español</option>
+                    <option value="Polish">Polski</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Champion selection -->
+        <div class="matchup-grid">
+            <div class="field-group">
+                <label>My Champion</label>
+                <input type="text" @bind="selection.MyChampion" placeholder="e.g. Morgana" />
+            </div>
+
+            <div class="vs-label">VS</div>
+
+            <div class="field-group">
+                <label>Opponent Champion</label>
+                <input type="text" @bind="selection.OpponentChampion" placeholder="e.g. Lux" />
+            </div>
+        </div>
+
+        <!-- Extra inputs only shown for Bot lane -->
+        @if (selection.SelectedLane == LaneRole.Bot)
+        {
+            <div class="matchup-grid duo-grid">
+                <div class="field-group">
+                    <label>My Duo Partner</label>
+                    <input type="text" @bind="selection.MyDuoChampion" placeholder="e.g. Samira" />
+                </div>
+
+                <div class="vs-label">VS</div>
+
+                <div class="field-group">
+                    <label>Opponent Duo Partner</label>
+                    <input type="text" @bind="selection.OpponentDuoChampion" placeholder="e.g. Miss Fortune" />
+                </div>
+            </div>
+        }
+
+        <button class="train-button" @onclick="TrainMe" disabled="@isLoading">
+            @(isLoading ? "Analyzing..." : "Train Me")
+        </button>
+    </div>
+
+    <!-- Results section -->
+    @if (result is not null)
+    {
+        <div class="results-grid">
+
+            @if (!string.IsNullOrWhiteSpace(result.LaneOverview))
+            {
+                <div class="result-card overview-card">
+                    <p>@result.LaneOverview</p>
+                </div>
+            }
+
+            <div class="result-card">
+                <h3>How to Play</h3>
+                <ol class="tip-list">
+                    @foreach (var point in result.Strategy)
+                    {
+                        <li><strong>@point.Title:</strong> @point.Description</li>
+                    }
+                </ol>
+            </div>
+
+            <div class="result-card">
+                <h3>Watch Out For</h3>
+                <ol class="tip-list">
+                    @foreach (var point in result.WatchOutFor)
+                    {
+                        <li><strong>@point.Title:</strong> @point.Description</li>
+                    }
+                </ol>
+            </div>
+
+            <div class="result-card">
+                <h3>Build — @result.MyBuild.ChampionName</h3>
+                <p><strong>Runes:</strong> @result.MyBuild.Runes</p>
+                <p><strong>Boots:</strong> @result.MyBuild.Boots</p>
+                <ol class="tip-list">
+                    @foreach (var item in result.MyBuild.CoreItems)
+                    {
+                        <li><strong>@item.Name:</strong> @item.Reason</li>
+                    }
+                </ol>
+            </div>
+
+            @if (result.DuoBuild is not null)
+            {
+                <div class="result-card">
+                    <h3>Build — @result.DuoBuild.ChampionName</h3>
+                    <p><strong>Runes:</strong> @result.DuoBuild.Runes</p>
+                    <p><strong>Boots:</strong> @result.DuoBuild.Boots</p>
+                    <ol class="tip-list">
+                        @foreach (var item in result.DuoBuild.CoreItems)
+                        {
+                            <li><strong>@item.Name:</strong> @item.Reason</li>
+                        }
+                    </ol>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private UserSelection selection = new();
+    private AiTrainingResponse? result;
+    private bool isLoading = false;
+
+    // Flip this to false only when you're ready to actually call the AI and spend tokens
+    private const bool UseMockResponse = true;
+
+    private void SelectLane(LaneRole lane)
+    {
+        selection.SelectedLane = lane;
+        Console.WriteLine(lane);
+    }
+    
+    private async Task TrainMe()
+    {
+        isLoading = true;
+        result = null;
+
+        if (UseMockResponse)
+        {
+            // Simulated delay so the loading state still looks realistic
+            await Task.Delay(800);
+            result = GetMockResponse();
+        }
+        else
+        {
+
+            var prompt = new Prompt(selection.ResponseLanguage)
+            {
+                Body = BuildPromptBody()
+            };
+
+            var raw = await AiTrainerService.CallTheAI($"{prompt.Header}\n\n{prompt.Body}");
+            result = ParseAiResponse(raw);
+        }
+
+        isLoading = false;
+    }
+
+    private string BuildPromptBody()
+    {
+        if (selection.SelectedLane == LaneRole.Bot)
+        {
+            return $"I play {selection.MyChampion} with {selection.MyDuoChampion} " +
+                   $"against {selection.OpponentChampion} and {selection.OpponentDuoChampion}. " +
+                   "What should I build and what's the strategy?";
+        }
+
+        return $"I play {selection.MyChampion} in {selection.SelectedLane} " +
+               $"against {selection.OpponentChampion}. What should I build and what's the strategy?";
+    }
+
+    private AiTrainingResponse ParseAiResponse(string raw)
+    {
+        var cleaned = raw.Trim();
+        if (cleaned.StartsWith("```"))
+        {
+            cleaned = cleaned.Trim('`');
+            cleaned = cleaned.Replace("json", "", StringComparison.OrdinalIgnoreCase).Trim();
+        }
+
+        try
+        {
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var parsed = JsonSerializer.Deserialize<AiTrainingResponse>(cleaned, options);
+
+            return parsed ?? new AiTrainingResponse
+            {
+                LaneOverview = "Could not read AI response."
+            };
+        }
+        catch (JsonException)
+        {
+            return new AiTrainingResponse
+            {
+                LaneOverview = raw,
+                WatchOutFor = new List<TipPoint>
+                {
+                    new() { Title = "Parsing error", Description = "The AI response was not valid JSON — showing raw text above." }
+                }
+            };
+        }
+    }
+
+    // Step 3: mock/placeholder logic to preview the UI without calling the AI
+    private AiTrainingResponse GetMockResponse()
+{
+    var response = new AiTrainingResponse
+    {
+        LaneOverview = "This lane is purely about early-game bullying. You have one of the strongest " +
+                       "combo lanes in the game (Morgana + Caitlyn), while they have monstrous late-game " +
+                       "scaling (Jinx + Senna) but are extremely squishy and immobile early. Kill them " +
+                       "before they reach their power spike.",
+
+        Strategy = new List<TipPoint>
+        {
+            new() {
+                Title = "The core combo: Q into trap",
+                Description = "This is your bread and butter. The moment you land Dark Binding (Q) on an " +
+                               "enemy, Caitlyn must instantly drop her trap (W) under them. A guaranteed " +
+                               "headshot follows, usually forcing a Flash or a kill."
+            },
+            new() {
+                Title = "Aggressive push from level 1",
+                Description = "Use your Tormented Shadow (W) on the back minions while Caitlyn uses her Q " +
+                               "to shove the wave faster than they can. Hitting level 2 first is critical — " +
+                               "if you land a Q right as it happens, you can win the lane by minute 2."
+            },
+            new() {
+                Title = "Pressure them under tower",
+                Description = "Caitlyn has enormous range. Your job is to shove them under their own tower, " +
+                               "poke with your W, and catch stray movements with Q while Caitlyn chips away " +
+                               "at tower plates."
+            }
+        },
+
+        WatchOutFor = new List<TipPoint>
+        {
+            new() {
+                Title = "Senna's sustain",
+                Description = "Senna can constantly heal Jinx with her Q. If you only go for small random " +
+                               "trades, they'll just heal it back and you'll waste mana. Play for all-in " +
+                               "burst right after your Q lands instead."
+            },
+            new() {
+                Title = "Black Shield timing",
+                Description = "Your magic shield is your most important defensive tool. Save it specifically " +
+                               "for Senna's slow, predictable W root or for Jinx's traps — the second any " +
+                               "hard CC is heading for Caitlyn, shield her immediately."
+            },
+            new() {
+                Title = "Jungle ganks",
+                Description = "Since you'll be pushed up under their tower 90% of the time, you're an easy " +
+                               "gank target. Warding the river and side brushes is your number one job."
+            }
+        },
+
+        MyBuild = new ChampionBuild
+        {
+            ChampionName = selection.MyChampion,
+            Runes = "Aery (Sorcery) — Manaflow Band, Transcendence, Scorch. Secondary: Cheap Shot, Eyeball Collection.",
+            Boots = "Ionian Boots of Lucidity — faster cooldowns on Q and Flash.",
+            CoreItems = new List<ItemPick>
+            {
+                new() { Name = "Oblivion Orb", Reason = "Rush this early specifically to shut down Senna's healing on Jinx." },
+                new() { Name = "Zhonya's Hourglass", Reason = "An absolute must — without it, diving in for your ultimate is suicide." },
+                new() { Name = "Liandry's Torment", Reason = "Your W will burn enemies for percent health damage over time." }
+            }
+        }
+    };
+
+    if (selection.SelectedLane == LaneRole.Bot)
+    {
+        response.DuoBuild = new ChampionBuild
+        {
+            ChampionName = selection.MyDuoChampion,
+            Runes = "Fleet Footwork or First Strike, depending on how aggressive the matchup is.",
+            Boots = "Berserker's Greaves.",
+            CoreItems = new List<ItemPick>
+            {
+                new() { Name = "The Collector", Reason = "Great first item if you're ahead on kills — helps execute squishy targets." },
+                new() { Name = "Infinity Edge", Reason = "Essential for scaling your headshot damage in the mid game." },
+                new() { Name = "Rapid Firecannon", Reason = "Extends your already massive range so you can hit from complete safety." }
+            }
+        };
+    }
+
+    return response;
+}
+}
