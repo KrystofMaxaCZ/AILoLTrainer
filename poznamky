@@ -2,3 +2,16 @@ Co udelat:
 	- Pripravit html pro odpoved
 	- Zkusit tam nahrat realne data z examplu
 	- Pripravit example realne z chata
+
+Co udelat dal:
+	- Zkusit pres RIOT Api key dat obrazky itemu 
+	- Pridat prepnuti mezi Pro a Flash
+	- Udelat lepsi strukturu
+
+
+------------- NOVA VERZE --------------
+
+- fetchnout data z RIOT API KEY - a rovnou vygenerovat build podle toho co hraji za champy 
+- a vlastne si jen napises svoje username a ronou to pozna jakou lajnnua champa hrajes
+
+- a muze ti to in time updatovat kdo je tedka silnej a jak hrat

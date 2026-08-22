@@ -7,4 +7,8 @@
     <UserSecretsId>91b8a9b9-f8a6-43c0-a31c-5171aea54d35</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\images\HeroImg.png" />
+  </ItemGroup>
+
 </Project>
